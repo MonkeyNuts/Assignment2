@@ -1,0 +1,7 @@
+Name: Shank 1
+Name: Rusty_Sword 2
+Name: Dagger 3
+Name: Sword 5
+Name: Cutlass 6
+Name: Great_Sword 7
+Name: Zweilander 8

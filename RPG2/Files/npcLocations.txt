@@ -1,0 +1,14 @@
+Name: Prisoner 1
+Name: Guard 1
+Name: Giant_Rat 2
+Name: Zombie 2
+Name: Archer 3
+Name: Archer 4
+Name: Guard 4
+Name: Ghost 5
+Name: Guard 5
+Name: Guard 6
+Name: Hound 6
+Name: Jagermeister 7
+Name: Elite_Guard 8
+Name: Evil_Wizard 9

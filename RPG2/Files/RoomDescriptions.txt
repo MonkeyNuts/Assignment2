@@ -1,0 +1,70 @@
+RoomName: Jail Room
+Number: 1
+Description: You seem to find yourself in a jail room.
+Description: Its late at night, the prisoners around you are asleep.
+Description: Its the room is dark and disorienting.
+Description: I need to escape.       
+Doors: South 2
+RoomName: Sewers
+Number: 2
+Description: You fall into the sewers.
+Description: You hear the flow of water.
+Description: That will lead me somewhere.
+Description: Which way though.
+Doors: East 3
+Doors: West 4 
+RoomName: Barracks
+Number: 3
+Description: This is where all the guards congregate.
+Description: Not a safe area.
+Description: The way out is through a group of guards.
+Description: High risk high reward.
+Doors: West 2
+Doors: South 5
+RoomName: Castle Walls
+Number: 4
+Description: Fresh air!
+Description: Archers line the wall on lookout.
+Description: half of them are half asleep.
+Description: I can follow these walls to get closer to the throne.
+Doors: South 6
+Doors: East 2
+RoomName: Corridors
+Number: 5
+Description: These seem to go on for miles.
+Description: Danger could be anywhere.
+Description: This has to lead somewhere.
+Description: I think I hear noise from the west.
+Doors: North 3
+Doors: West 7
+RoomName: Courtyard
+Number: 6
+Description: In the day there would be a lot more people here.
+Description: Guards patrol the area.
+Description: With hounds.
+Description: This must be close to the palace.
+Doors: North 4
+Doors: East 8
+RoomName: Banquet Hall
+Number: 7
+Description: Not quite what I was looking for.
+Description: But noble people gather here so I must be close.
+Description: The place is a mess.
+Description: A couple noblemen are passed out drunk on the floor.
+Doors: South 9
+Doors: East 5
+RoomName: Grand Hall
+Number: 8
+Description: The throne room is right in front of me!
+Description: This room is gigantic with nowhere to hide.
+Description: Huge guards stand outside the throne room doors.
+Description: I'll need to be well prepared to procede.
+Doors: West 6
+Doors: South 9
+RoomName: Evil Wizards Throne
+Number: 9
+Description: You see him upon his throne.
+Description: He brought you here so he can bring you back.
+Description: For a frail old man he is very intimidating.
+Description: Am I ready for this?
+Doors: Hole 1
