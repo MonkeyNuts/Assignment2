@@ -1,9 +1,11 @@
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import javax.swing.JOptionPane;
 
 //TODO Error list: null pointer exception with summon x and create x (summon fixed, inRoom wasnt in NPC class)
 // file reader not outputting properly (easy to fix, mostly done already)
@@ -99,6 +101,7 @@ public class Logic {
 						if (x[1].equalsIgnoreCase(doorArray[1])) {
 							Objects.player.inRoom = Integer.parseInt(doorArray[2]);
 							System.out.println("You exit " +doorArray[1]);
+                                                        RPGMainJFram.jLabelRoomNum.setText(String.valueOf(Objects.player.inRoom));
 						}
 					}
 				}
@@ -270,18 +273,22 @@ public class Logic {
 	
 	// input for the players name, has a bit of story elements, stats given are always the same.
 	public void characterCreator() {
-		Title.titleScreen();
+		//Title.titleScreen();
 		System.out.println("");
 		System.out.println("\"Greetings... What is your name traveller?\"");
 		Scanner scan = new Scanner(System.in);
-		Objects.player.name = scan.nextLine();
+		Objects.player.name = JOptionPane.showInputDialog("Enter your name");
+                RPGMainJFram.jLabelName.setText(RPGMainJFram.jLabelName.getText() + Objects.player.name);
 		characterDetail.Details();
 		System.out.println("\n");
 		System.out.println("\"You look weak " +Objects.player.name+ "\"" + " The shady old man performs some magic healing spell on you. \nYou feel nauseous but energised." );
 		Objects.player.hp = 100;
 		Objects.player.accuracy = 75;
+                RPGMainJFram.jLabelHPNum.setText(String.valueOf(Objects.player.hp));
+                RPGMainJFram.jLabelAccNum.setText(String.valueOf(Objects.player.accuracy));
 		System.out.println("Your stats have been updated.");
 		System.out.println("Hp: 100 \nAccuracy: 75");
 		Objects.player.inRoom = 1;
+                RPGMainJFram.jLabelRoomNum.setText(String.valueOf(Objects.player.inRoom));
 	}
 }
