@@ -19,6 +19,7 @@ public class Combat {
 								int npcDamage = Objects.rng.random(10);
 								Objects.player.hp = Objects.player.hp - npcDamage;
 								System.out.println("The " +Objects.room.get(i).npc.get(j).name+ " attacks you for "+npcDamage+ " Damage.");
+                                                                RPGMainJFram.jLabelHPNum.setText(String.valueOf(Objects.player.hp));
 							} 
 							else {
 								System.out.println("The " +Objects.room.get(i).npc.get(j).name+ " misses you.");

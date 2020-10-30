@@ -19,7 +19,7 @@ public class itemThreading extends NPC{
 				try {
 					while(true) {
 						itemSpawner();
-						Thread.sleep(1000);
+						Thread.sleep(100000);
 					}
 				} catch (InterruptedException e) {
 					System.out.println(e);

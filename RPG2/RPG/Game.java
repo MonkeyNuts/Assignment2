@@ -3,7 +3,7 @@ public class Game {
 // creates instance of logic class called gameLogic, initialises array
 // starts the npcthreading and starts the game looper
 // gameLogic.inputCommand(); is just going to repeat waiting for a command
-	static Logic gameLogic   = new Logic();
+	static Logic gameLogic = new Logic();
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

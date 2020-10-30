@@ -1,4 +1,11 @@
 import java.util.ArrayList;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+
 //Character has a name, hp,accuracy inRoom (starts at 0 for character creation)
 // and two arraylists for items and items the character is wearing.
 // has look method to show characters hp and acc when you use look self
@@ -6,14 +13,22 @@ import java.util.ArrayList;
 //remove removes item from a character by taking it out of wornItems array
 //equipment simply shows a characters worn items
 //equip adds an item to wornItems.
+
 public class Character {
 	String name;
 	int hp;
 	int accuracy;
 	int inRoom = 0;
+        
+
+        
+        
 	ArrayList<Item> item = new ArrayList<Item>(); //maybe not static
+        
 	ArrayList<Item> wornItems = new ArrayList<Item>();
+       
 	public void look() {
+                System.out.println("\n");
 		System.out.println("Hp:" +hp);
 		System.out.println("Accuracy:" +accuracy);
 	}
@@ -23,6 +38,7 @@ public class Character {
 				System.out.println("You remove a " +wornItems.get(i).id);
 				item.add(wornItems.get(i));
 				wornItems.remove(i);
+                                RPGMainJFram.updateInventory();
 			}
 		}
 	}
@@ -32,12 +48,13 @@ public class Character {
 		}
 	}
 	public void equip(String[] x) {
-		if (wornItems.size() == 0) {
+		if (wornItems.isEmpty()) {
 			for (int i =0; i < item.size(); i++ ) {
 				if(x[1].equalsIgnoreCase(item.get(i).id) && item.get(i).isEquipable) {
 					wornItems.add(item.get(i));
 					System.out.println("You equip a "+item.get(i).name);
 					item.remove(i);
+                                        RPGMainJFram.updateInventory();
 					break;
 				}
 			}
@@ -57,6 +74,7 @@ public class Character {
 					wornItems.add(item.get(i));
 					System.out.println("You equip a "+item.get(i).name);
 					item.remove(i);
+                                        RPGMainJFram.updateInventory();
 					break;
 				}
 			}

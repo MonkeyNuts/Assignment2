@@ -5,10 +5,19 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import static java.lang.Thread.sleep;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.TypedQuery;
 import javax.swing.JMenuItem;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.text.DefaultCaret;
-
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 
 
@@ -48,6 +57,8 @@ public class RPGMainJFram extends javax.swing.JFrame {
         jPopupMenuMove = new javax.swing.JPopupMenu();
         jPopupMenuGet = new javax.swing.JPopupMenu();
         jPopupMenuFight = new javax.swing.JPopupMenu();
+        jPopupMenuEQ = new javax.swing.JPopupMenu();
+        jPopupMenuRemove = new javax.swing.JPopupMenu();
         jPanelOutput = new javax.swing.JPanel();
         jScrollPaneOutput = new javax.swing.JScrollPane();
         jTextAreaOutput = new javax.swing.JTextArea();
@@ -56,6 +67,9 @@ public class RPGMainJFram extends javax.swing.JFrame {
         jButtonMove = new javax.swing.JButton();
         jButtonFight = new javax.swing.JButton();
         jButtonGet = new javax.swing.JButton();
+        jButtonEQ = new javax.swing.JButton();
+        jButtonRem = new javax.swing.JButton();
+        jButtonHS = new javax.swing.JButton();
         jLabelHP = new javax.swing.JLabel();
         jLabelAcc = new javax.swing.JLabel();
         jLabelRoom = new javax.swing.JLabel();
@@ -63,8 +77,6 @@ public class RPGMainJFram extends javax.swing.JFrame {
         jLabelHPNum = new javax.swing.JLabel();
         jLabelAccNum = new javax.swing.JLabel();
         jLabelRoomNum = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
 
         menuCharacter.setText("Character");
         menuCharacter.addActionListener(new java.awt.event.ActionListener() {
@@ -82,15 +94,27 @@ public class RPGMainJFram extends javax.swing.JFrame {
         });
         jPopupMenuLook.add(menuRoom);
 
+        jPopupMenuEQ.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPopupMenuEQMouseClicked(evt);
+            }
+        });
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 formMouseClicked(evt);
             }
         });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                RPGclose(evt);
+            }
+        });
 
         jScrollPaneOutput.setAutoscrolls(true);
 
+        jTextAreaOutput.setEditable(false);
         jTextAreaOutput.setColumns(20);
         jTextAreaOutput.setRows(5);
         jScrollPaneOutput.setViewportView(jTextAreaOutput);
@@ -143,6 +167,27 @@ public class RPGMainJFram extends javax.swing.JFrame {
             }
         });
 
+        jButtonEQ.setText("Equip");
+        jButtonEQ.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEQActionPerformed(evt);
+            }
+        });
+
+        jButtonRem.setText("Remove");
+        jButtonRem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRemActionPerformed(evt);
+            }
+        });
+
+        jButtonHS.setText("Highscores");
+        jButtonHS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonHSActionPerformed(evt);
+            }
+        });
+
         jLabelHP.setText("Health Points: ");
 
         jLabelAcc.setText("Accuracy: ");
@@ -151,10 +196,6 @@ public class RPGMainJFram extends javax.swing.JFrame {
 
         jLabelHPNum.setPreferredSize(new java.awt.Dimension(50, 25));
 
-        jButton1.setText("Equip");
-
-        jButton2.setText("Remove");
-
         javax.swing.GroupLayout jPanelActionBarLayout = new javax.swing.GroupLayout(jPanelActionBar);
         jPanelActionBar.setLayout(jPanelActionBarLayout);
         jPanelActionBarLayout.setHorizontalGroup(
@@ -162,29 +203,34 @@ public class RPGMainJFram extends javax.swing.JFrame {
             .addGroup(jPanelActionBarLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelActionBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButtonFight)
                     .addComponent(jButtonMove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonLook, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(175, 175, 175)
+                    .addComponent(jButtonLook, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonFight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(jPanelActionBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelActionBarLayout.createSequentialGroup()
-                        .addComponent(jLabelRoom)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelRoomNum))
-                    .addComponent(jLabelName)
+                        .addGap(175, 175, 175)
+                        .addGroup(jPanelActionBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelActionBarLayout.createSequentialGroup()
+                                .addComponent(jLabelRoom)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelRoomNum))
+                            .addComponent(jLabelName)
+                            .addGroup(jPanelActionBarLayout.createSequentialGroup()
+                                .addComponent(jLabelAcc)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelAccNum))
+                            .addGroup(jPanelActionBarLayout.createSequentialGroup()
+                                .addComponent(jLabelHP)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelHPNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanelActionBarLayout.createSequentialGroup()
-                        .addComponent(jLabelAcc)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelAccNum))
-                    .addGroup(jPanelActionBarLayout.createSequentialGroup()
-                        .addComponent(jLabelHP)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelHPNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(166, 166, 166)
+                        .addComponent(jButtonHS)))
                 .addGap(163, 163, 163)
                 .addGroup(jPanelActionBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButtonRem, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButtonGet, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButtonEQ, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelActionBarLayout.setVerticalGroup(
@@ -203,9 +249,9 @@ public class RPGMainJFram extends javax.swing.JFrame {
                                 .addGap(12, 12, 12)
                                 .addComponent(jButtonFight))
                             .addGroup(jPanelActionBarLayout.createSequentialGroup()
-                                .addComponent(jButton1)
+                                .addComponent(jButtonEQ)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton2))))
+                                .addComponent(jButtonRem))))
                     .addGroup(jPanelActionBarLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabelName)
@@ -220,8 +266,10 @@ public class RPGMainJFram extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelActionBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabelRoom)
-                            .addComponent(jLabelRoomNum))))
-                .addContainerGap(34, Short.MAX_VALUE))
+                            .addComponent(jLabelRoomNum))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonHS)))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -247,7 +295,8 @@ public class RPGMainJFram extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+   
+    //all button and mouse listeners for popup menus and buttons which then run functions.
     private void jButtonLookMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonLookMouseClicked
         // TODO add your handliadsdasng code here:dsfsdf
         jPopupMenuLook.show((Component)evt.getSource(), 0, 0);
@@ -289,12 +338,97 @@ public class RPGMainJFram extends javax.swing.JFrame {
         // TODO add your handling code here:
         jPopupMenuGet.show((Component)evt.getSource(), 0, 0);
     }//GEN-LAST:event_jButtonGetActionPerformed
+    // saves the players score to the database on game close
+    private void RPGclose(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_RPGclose
+        // TODO add your handling code here:
+        Session session = HibernateUtils.getSession();
+        Transaction tx = session.beginTransaction();
+        UserScore score = new UserScore (Objects.player, Objects.player.name);
+        session.save(score);
+        tx.commit();
+        session.close(); 
+        HibernateUtils.shutdown();
+    }//GEN-LAST:event_RPGclose
+    //gets results from the database obtained after the game has been closed and prints
+    //them to the jtextarea NOTE: there wont be a highscore on the first game.
+    private void jButtonHSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonHSActionPerformed
+        // TODO add your handling code here:
+        Session session = HibernateUtils.getSession();
+        Transaction tx = session.beginTransaction();
+        String hql = "select u from UserScore u";
+        Query query = session.createQuery(hql);
+        List results = query.list();
+        System.out.println("\nHighscores");
+        System.out.println("==========");
+        for(Object object : results) {
+            UserScore score = (UserScore) object;
+            double result = score.getScore();
+            String name = score.getPlayerName();
+            System.out.println(name +" "+ result);
+        }
+        System.out.println("==========");
+        tx.commit();
+        session.close();
+        //supposed to print out the scores of users, null pointer error
+    }//GEN-LAST:event_jButtonHSActionPerformed
+
+    private void jButtonEQActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEQActionPerformed
+        // TODO add your handling code here:
+           jPopupMenuEQ.show((Component)evt.getSource(), 0, 0);
+    }//GEN-LAST:event_jButtonEQActionPerformed
+
+    private void jPopupMenuEQMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPopupMenuEQMouseClicked
+        // TODO add your handling code here:
+        jPopupMenuEQ.show((Component)evt.getSource(), 0, 0);
+    }//GEN-LAST:event_jPopupMenuEQMouseClicked
+
+    private void jButtonRemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemActionPerformed
+        // TODO add your handling code here:
+        jPopupMenuRemove.show((Component)evt.getSource(), 0, 0);
+    }//GEN-LAST:event_jButtonRemActionPerformed
+    
+    // updateRoom clears all the buttons to make sure the right items are displayed for the room their in
+    // old items removed and new ones added in.
+    public static void updateInventory(){
+        while(jPopupMenuEQ.getSubElements().length != 0) jPopupMenuEQ.remove(0);
+        while(jPopupMenuRemove.getSubElements().length != 0) jPopupMenuRemove.remove(0);
+        
+                for (Item item : Objects.player.item){
+                JMenuItem equipItem = jPopupMenuEQ.add(item.name);
+                equipItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ev) {
+                        String[] x = new String[]{"equip", equipItem.getText()};
+                        Objects.player.equip(x);
+                }
+            });
+        }
+                for (Item item : Objects.player.wornItems){
+                JMenuItem equipItem = jPopupMenuEQ.add(item.name);
+                JMenuItem removeItem = jPopupMenuRemove.add(item.name);
+                removeItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ev) {
+                        String[] x = new String[]{"remove", removeItem.getText()};
+                        Objects.player.remove(x);
+                }
+            });            
+        }
+                jLabelAccNum.setText(String.valueOf(Objects.player.accuracy));
+    }
+    
+    // updateRoom clears all the buttons to make sure the right elements are displayed for the room their in
+    // old elements removed and new ones added in.
+    //includes action listeners for popupmenus that contain game fucntions.
     public static void updateRoom(){
     while(jPopupMenuMove.getSubElements().length != 0) jPopupMenuMove.remove(0);
     while(jPopupMenuLook.getSubElements().length != 2) jPopupMenuLook.remove(2);
     while(jPopupMenuFight.getSubElements().length != 0) jPopupMenuFight.remove(0);
     while(jPopupMenuGet.getSubElements().length != 0) jPopupMenuGet.remove(0);
+    while(jPopupMenuEQ.getSubElements().length != 0) jPopupMenuEQ.remove(0);
 
+    updateInventory();
+    
     Room currentRoom = null; // <-- I had to do this and I dont know why, netBeans being netBeans.
     for (Room room : Objects.room){
         if (room.number == Objects.player.inRoom) currentRoom = room;
@@ -331,7 +465,7 @@ public class RPGMainJFram extends javax.swing.JFrame {
                 }
             });
             jPopupMenuLook.add(npcItem);
-            JMenuItem fightItem = jPopupMenuFight.add(npc.name);
+            JMenuItem fightItem = jPopupMenuFight.add(npc.id);
             fightItem.addActionListener(new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent ev) {
@@ -369,6 +503,7 @@ public class RPGMainJFram extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new RPGMainJFram().setVisible(true);
+            //sets the text area to be system.out
             PrintStream out = new PrintStream(new OutputStream() {
                 @Override
                 public void write(int b) throws IOException {
@@ -376,10 +511,12 @@ public class RPGMainJFram extends javax.swing.JFrame {
                 }
             });
             System.setOut(out);
+            
+            //runs the game code on a different thread so the gui doesnt freeze up
             Thread thread = new Thread() {
                 @Override
                 public void run() {
-                   DefaultCaret caret = (DefaultCaret)jTextAreaOutput.getCaret();
+                    DefaultCaret caret = (DefaultCaret)jTextAreaOutput.getCaret();
                     caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
                     Objects.setupNPCArray();
                     Objects.setupItemArray();
@@ -388,6 +525,7 @@ public class RPGMainJFram extends javax.swing.JFrame {
                     npcThreading thread = new npcThreading(gameLogic);
                     thread.npcThread();
                     gameLogic.inputCommand();
+                    
                 }
             };
             thread.start();
@@ -398,12 +536,13 @@ public class RPGMainJFram extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButtonEQ;
     private javax.swing.JButton jButtonFight;
     private javax.swing.JButton jButtonGet;
+    private javax.swing.JButton jButtonHS;
     private javax.swing.JButton jButtonLook;
     private javax.swing.JButton jButtonMove;
+    private javax.swing.JButton jButtonRem;
     public javax.swing.JLabel jLabelAcc;
     public static javax.swing.JLabel jLabelAccNum;
     public javax.swing.JLabel jLabelHP;
@@ -413,10 +552,12 @@ public class RPGMainJFram extends javax.swing.JFrame {
     public static javax.swing.JLabel jLabelRoomNum;
     private javax.swing.JPanel jPanelActionBar;
     private javax.swing.JPanel jPanelOutput;
+    private static javax.swing.JPopupMenu jPopupMenuEQ;
     private static javax.swing.JPopupMenu jPopupMenuFight;
     private static javax.swing.JPopupMenu jPopupMenuGet;
     private static javax.swing.JPopupMenu jPopupMenuLook;
     private static javax.swing.JPopupMenu jPopupMenuMove;
+    private static javax.swing.JPopupMenu jPopupMenuRemove;
     private javax.swing.JScrollPane jScrollPaneOutput;
     private static javax.swing.JTextArea jTextAreaOutput;
     private javax.swing.JMenuItem menuCharacter;

@@ -1,4 +1,7 @@
 
+
+
+
 public class Item{
 	String name;
 	String id = "item"; //fixed create item by initialising the variable

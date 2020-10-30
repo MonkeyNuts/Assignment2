@@ -100,8 +100,9 @@ public class Logic {
 						String[] doorArray = (doorExit.split(" "));
 						if (x[1].equalsIgnoreCase(doorArray[1])) {
 							Objects.player.inRoom = Integer.parseInt(doorArray[2]);
+                                                        RPGMainJFram.updateRoom();
 							System.out.println("You exit " +doorArray[1]);
-                                                        RPGMainJFram.jLabelRoomNum.setText(String.valueOf(Objects.player.inRoom));
+                                                      
 						}
 					}
 				}
@@ -190,7 +191,7 @@ public class Logic {
 								Objects.player.item.add(roomItem);
 								System.out.println("You pick up a " +roomItem.name);
 								Objects.room.get(j).item.remove(k);
-								
+								RPGMainJFram.updateInventory();
 								break;
 							}
 						}
@@ -289,6 +290,7 @@ public class Logic {
 		System.out.println("Your stats have been updated.");
 		System.out.println("Hp: 100 \nAccuracy: 75");
 		Objects.player.inRoom = 1;
-                RPGMainJFram.jLabelRoomNum.setText(String.valueOf(Objects.player.inRoom));
+                RPGMainJFram.updateRoom();
+                
 	}
 }

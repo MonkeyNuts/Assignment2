@@ -1,6 +1,7 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.Scanner;
+import javax.swing.JOptionPane;
 // writes character details to a file, doesnt really do anything in the game.
 //immersion? 
 public class characterDetail {
@@ -9,7 +10,7 @@ public class characterDetail {
 		 System.out.print("Write any other details you want about your character: ");
 		 System.out.print("\n");
 	        Scanner scan = new Scanner(System.in);
-	        Details = scan.nextLine();
+	        Details = JOptionPane.showInputDialog("Enter your details");
 	        FileWriter fWriter = null;
 	        BufferedWriter writer = null;
 	        try {

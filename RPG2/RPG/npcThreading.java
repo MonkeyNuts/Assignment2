@@ -19,7 +19,7 @@ public class npcThreading extends NPC{
 				try {
 					while(true) {
 						npcSpawner();
-						Thread.sleep(1000);
+						Thread.sleep(20000);
 					}
 				} catch (InterruptedException e) {
 					System.out.println(e);
